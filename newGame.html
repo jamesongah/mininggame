@@ -1,0 +1,98 @@
+<html>
+    <head>
+        
+    </head>
+    <body>
+        <div id="infoI" style="z-index: 1; background-color: #ffffff; border-radius: 10px; position: fixed; left: 10; top: 10; width: 100px;">
+            <p id="toolI" style="position: absolute; top: 0; left: 0">Tier 1 Pickaxe</p>
+            <p id="moneyI" style="position: absolute; top: 15; left: 0">$0</p>
+            <div id="loaderBar" style="visibility: visible; z-index: 2; position: absolute; top: 50; left: 0; background-color: #00ff00; width: 0; height: 10px;"></div>
+            <div id="loaderContainer" style="visibility: visible; z-index: 1; position: absolute; top: 50; left: 0; background-color: #cccccc; width: 50px; height: 10px;"></div>
+        </div>
+        <script>
+            var infoI = document.getElementById("infoI");
+            var toolI = document.getElementById("toolI");
+            var moneyI = document.getElementById("moneyI");
+            var money = 0;
+            var loaderBar = document.getElementById("loaderBar");
+            var loaderContainer = document.getElementById("loaderContainer");
+            var miningInterval = null;
+            const blocks = [
+                ["Basalt", 10, 20, "#4E5356", "#ffffff"],
+                ["Stone", 3, 4, "#9096A0", "#ffffff"],
+                ["Iron", 25, 30, "#E4E4E6", "#000000"],
+                ["Diamond", 1000, 500, "#B2EAF6", "#000000"],
+                ["Granite", 7, 15, "#917B6D", "#ffffff"],
+                ["Limestone", 6, 14, "#958C7B", "#ffffff"],
+                ["Marble", 40, 50, "#998D7F", "#ffffff"],
+                ["Quartz", 120, 78, "#B8AFAA", "#000000"],
+                ["Rhyolite", 39, 49, "#AD8B66", "#ffffff"],
+                ["Sandstone", 11, 21, "#998B6E", "#ffffff"],
+                ["Shale", 35, 47, "#675143", "#ffffff"],
+                ["Slate", 8, 17, "#767571", "#ffffff"],
+            ];
+
+            function mineM(toolStrength, blockStrength, cost, element) {
+                var secondsToMine = blockStrength / toolStrength;
+                loaderBar.style.visibility = "visible";
+                loaderContainer.style.visibility = "visible";
+                if (miningInterval !== null) {
+                    clearInterval(miningInterval);
+                }
+                let intervalIndex = 0;
+                miningInterval = setInterval(() => {
+                    if (intervalIndex <= 50) {
+                        if (miningInterval !== null) {
+                            intervalIndex += 1;
+                            loaderBar.style.setProperty("width", intervalIndex);
+                        }
+                    } else {
+                        loaderBar.style.width = 0;
+                        clearInterval(miningInterval);
+                        money += cost;
+                        moneyI.innerHTML = "$" + money;
+                        element.remove();
+                    }
+                }, secondsToMine / 50 * 1000);
+            }
+
+            function spawn(name, blockStrength, cost, Bcolor, color, x, y) {
+                let newDiv = document.createElement("div");
+                newDiv.addEventListener("click", () => {
+                    mineM(50, blockStrength, cost, newDiv);
+                })
+                newDiv.style = "position: fixed; width: 50px; height: 50px; text-align: center; user-select: none; text-size: smaller; margin: none; vertical-align: middle; line-height: 50px; z-index: 0";
+                newDiv.innerHTML = name;
+                newDiv.style.backgroundColor = Bcolor;
+                newDiv.style.color = color;
+                newDiv.style.left = x;
+                newDiv.style.top = y;
+                document.body.appendChild(newDiv);
+            }
+
+            function mainInterval() {
+                let blockDetails = blocks[Math.floor(Math.random() * blocks.length)];
+                let name = blockDetails[0];
+                let blockStrength = blockDetails[2];
+                let cost = blockDetails[1];
+                let Bcolor = blockDetails[3];
+                let color = blockDetails[4];
+                let x = Math.floor(Math.random() * document.body.clientWidth);
+                let y = Math.floor(Math.random() * document.body.clientHeight);
+                if (x > document.body.clientWidth - 50) {
+                    x -= 25;
+                }
+                if (y > document.body.clientHeight - 50) {
+                    y -= 25;
+                }
+                spawn(name, blockStrength, cost, Bcolor, color, x, y);
+            }
+
+            document.addEventListener("mousemove", () => {
+                infoI.style.left = window.event.clientX + 10;
+                infoI.style.top = window.event.clientY + 10;
+            });
+            setInterval(mainInterval, 1000);
+        </script>
+    </body>
+</html>
