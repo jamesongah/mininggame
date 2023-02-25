@@ -59,7 +59,7 @@
             function spawn(name, blockStrength, cost, Bcolor, color, x, y) {
                 let newDiv = document.createElement("div");
                 newDiv.addEventListener("click", () => {
-                    mineM(50, blockStrength, cost, newDiv);
+                    mineM(500, blockStrength, cost, newDiv);
                 })
                 newDiv.style = "position: fixed; width: 50px; height: 50px; text-align: center; user-select: none; text-size: smaller; margin: none; vertical-align: middle; line-height: 50px; z-index: 0";
                 newDiv.innerHTML = name;
