@@ -30,6 +30,7 @@
                 ["Sandstone", 11, 21, "#998B6E", "#ffffff"],
                 ["Shale", 35, 47, "#675143", "#ffffff"],
                 ["Slate", 8, 17, "#767571", "#ffffff"],
+                ["Amethyst", 125, 400, "#b603fc", "#ffffff"],
             ];
 
             function mineM(toolStrength, blockStrength, cost, element) {
@@ -59,7 +60,7 @@
             function spawn(name, blockStrength, cost, Bcolor, color, x, y) {
                 let newDiv = document.createElement("div");
                 newDiv.addEventListener("click", () => {
-                    mineM(500, blockStrength, cost, newDiv);
+                    mineM(10, blockStrength, cost, newDiv);
                 })
                 newDiv.style = "position: fixed; width: 50px; height: 50px; text-align: center; user-select: none; text-size: smaller; margin: none; vertical-align: middle; line-height: 50px; z-index: 0";
                 newDiv.innerHTML = name;
