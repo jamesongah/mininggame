@@ -6,7 +6,8 @@
         <div id="infoI" style="z-index: 1; background-color: #ffffff; border-radius: 10px; position: fixed; left: 10; top: 10; width: 100px;">
             <p id="toolI" style="position: absolute; top: 0; left: 0">Tier 1 Pickaxe</p>
             <p id="moneyI" style="position: absolute; top: 15; left: 0">$0</p>
-            <div id="loaderBar" style="visibility: visible; z-index: 2; position: absolute; top: 50; left: 0; background-color: #00ff00; width: 0; height: 10px;"></div>
+            <div 
+                id="loaderBar" style="visibility: visible; z-index: 2; position: absolute; top: 50; left: 0; background-color: #00ff00; width: 0; height: 10px;"></div>
             <div id="loaderContainer" style="visibility: visible; z-index: 1; position: absolute; top: 50; left: 0; background-color: #cccccc; width: 50px; height: 10px;"></div>
         </div>
         <script>
@@ -40,6 +41,7 @@
                 loaderContainer.style.visibility = "visible";
                 if (miningInterval !== null) {
                     clearInterval(miningInterval);
+                    loaderBar.style.width = 0;
                 }
                 let intervalIndex = 0;
                 miningInterval = setInterval(() => {
@@ -63,7 +65,7 @@
                 newDiv.addEventListener("click", () => {
                     mineM(10, blockStrength, cost, newDiv);
                 })
-                newDiv.style = "position: fixed; width: 50px; height: 50px; text-align: center; user-select: none; text-size: smaller; margin: none; vertical-align: middle; line-height: 50px; z-index: 0";
+                newDiv.style = "position: fixed; width: 50px; height: 50px; text-align: center; user-select: none; font-size: smaller; margin: none; vertical-align: middle; line-height: 50px; z-index: 0";
                 newDiv.innerHTML = name;
                 newDiv.style.backgroundColor = Bcolor;
                 newDiv.style.color = color;
