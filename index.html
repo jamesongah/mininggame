@@ -3,32 +3,42 @@
         <title>mininggame</title>
     </head>
     <body>
-        <div id="infoI" style="z-index: 1; background-color: #ffffff; border-radius: 10px; position: fixed; left: 10; top: 10; width: 100px;">
-            <p id="toolI" style="position: absolute; top: 0; left: 0">Tier 1 Pickaxe</p>
-            <p id="moneyI" style="position: absolute; top: 15; left: 0">$0</p>
+        <div id="infoI" style="visibility: hidden; z-index: 2; background-color: #efefef; border-radius: 10px; position: fixed; left: 10; top: 10; width: 100px; height: 62; padding: 5px; margin-top: 0px; padding-top: 0;">
+            <p id="toolI" style="position: absolute; top: -14; left: 5"></p>
+            <p id="moneyI" style="color: #00cc00; position: absolute; top: 1; left: 5">$0</p>
+            <p id="blockI" style="position: absolute; top: 16; left: 5;"></p>
             <div 
-                id="loaderBar" style="visibility: visible; z-index: 2; position: absolute; top: 50; left: 0; background-color: #00ff00; width: 0; height: 10px;"></div>
-            <div id="loaderContainer" style="visibility: visible; z-index: 1; position: absolute; top: 50; left: 0; background-color: #cccccc; width: 50px; height: 10px;"></div>
+                id="loaderBar" style="margin: 0 auto; visibility: hidden; z-index: 2; position: absolute; top: 51; left: 25; background-color: #00ff00; width: 0; height: 10px;"></div>
+            <div id="loaderContainer" style="visibility: hidden; z-index: 1; position: absolute; top: 51; left: 25; background-color: #cccccc; width: 50px; height: 10px;"></div>
         </div>
         <script>
             var infoI = document.getElementById("infoI");
             var toolI = document.getElementById("toolI");
             var moneyI = document.getElementById("moneyI");
             var money = 0;
+            var blockI = document.getElementById("blockI");
             var loaderBar = document.getElementById("loaderBar");
             var loaderContainer = document.getElementById("loaderContainer");
             var miningInterval = null;
             const blocks = [
                 ["Basalt", 10, 20, "#4E5356", "#ffffff"],
+                ["Tin", 14, 18, "#7B8973", "#000000"],
+                ["Lead", 23, 20, "#6F7B8A", "#ffffff"],
+                ["Potassium", 9, 7, "#9EABAA", "#000000"],
+                ["Sodium", 20, 10, "#D4C9C8", "#000000"],
+                ["Zinc", 16, 20, "#98999D", "#000000"],
+                ["Copper", 32, 27, "#B26F31", "#ffffff"],
+                ["Aluminium", 10, 20, "#83878A", "#000000"],
                 ["Stone", 3, 4, "#9096A0", "#ffffff"],
                 ["Iron", 25, 30, "#E4E4E6", "#000000"],
                 ["Diamond", 1000, 500, "#B2EAF6", "#000000"],
                 ["Granite", 7, 15, "#917B6D", "#ffffff"],
-                ["Limestone", 6, 14, "#958C7B", "#ffffff"],
+                ["Limestone", 6, 8, "#958C7B", "#ffffff"],
                 ["Marble", 40, 50, "#998D7F", "#ffffff"],
                 ["Quartz", 120, 78, "#B8AFAA", "#000000"],
                 ["Rhyolite", 39, 49, "#AD8B66", "#ffffff"],
                 ["Sandstone", 11, 21, "#998B6E", "#ffffff"],
+                ["Silver", 439, 84, "#BABABA", "#000000"],
                 ["Shale", 35, 47, "#675143", "#ffffff"],
                 ["Slate", 8, 17, "#767571", "#ffffff"],
                 ["Amethyst", 125, 400, "#b603fc", "#ffffff"],
@@ -36,23 +46,21 @@
                 ["Coal", 20, 15, "#000000", "#ffffff"],
             ];
             const tools = [
-                ["Tier 1 Pickaxe", 0, 1],
-                ["Tier 2 Pickaxe", 50, 3],
-                ["Tier 3 Pickaxe", 100, 5],
-                ["Tier 4 Pickaxe", 250, 10],
-                ["Tier 5 Pickaxe", 750, 20],
-                ["Tier 6 Pickaxe", 1000, 30],
-                ["Tier 7 Pickaxe", 1200, 35],
-                ["Tier 8 Pickaxe", 1500, 40],
-                ["Tier 9 Pickaxe", 1750, 45],
-                ["Tier 10 Pickaxe", 2000, 50],
+                ["Tier 1 Pickaxe", 0, 1, 15],
+                ["Tier 2 Pickaxe", 50, 3, 30],
+                ["Tier 3 Pickaxe", 100, 5, 60],
+                ["Tier 4 Pickaxe", 250, 10, 80],
+                ["Tier 5 Pickaxe", 750, 20, 100],
+                ["Tier 6 Pickaxe", 1000, 30, 150],
+                ["Tier 7 Pickaxe", 1200, 35, 200],
+                ["Tier 8 Pickaxe", 1500, 40, 300],
+                ["Tier 9 Pickaxe", 1750, 45, 400],
+                ["Tier 10 Pickaxe", 2000, 50, 500],
             ];
-            const places = [
-                
-            ];
-            var currentTool = tools[0];
+            var currentTool = tools[9];
+            toolI.innerHTML = currentTool[0];
             
-            function mineM(toolStrength, blockStrength, cost, element) {
+            function mineM(toolStrength, blockStrength, cost, element, name) {
                 var secondsToMine = blockStrength / toolStrength;
                 loaderBar.style.visibility = "visible";
                 loaderContainer.style.visibility = "visible";
@@ -72,6 +80,9 @@
                         clearInterval(miningInterval);
                         money += cost;
                         moneyI.innerHTML = "$" + money;
+                        loaderBar.style.visibility = "hidden";
+                        loaderContainer.style.visibility = "hidden";
+                        blockI.innerHTML = "";
                         element.remove();
                     }
                 }, secondsToMine / 50 * 1000);
@@ -80,11 +91,23 @@
             function spawn(name, blockStrength, cost, Bcolor, color, x, y) {
                 let newDiv = document.createElement("div");
                 newDiv.addEventListener("click", () => {
-                    let toolStrength = tools[currentTool]
-                    mineM(toolStrength, blockStrength, cost, newDiv);
-                })
-                newDiv.style = "position: fixed; width: 50px; height: 50px; text-align: center; user-select: none; font-size: 10px; margin: none; vertical-align: middle; line-height: 50px; z-index: 0";
-                newDiv.innerHTML = name;
+                    if (blockStrength <= currentTool[3]) {
+                        let toolStrength = currentTool[2];
+                        mineM(toolStrength, blockStrength, cost, newDiv, name);
+                    } else {
+                        blockI.innerHTML = "Too strong!"
+                        blockI.style.color = "#cc0000";
+                    }
+                });
+                newDiv.addEventListener("mouseover", () => {
+                    blockI.innerHTML = name;
+                    blockI.style.color = Bcolor;
+                });
+                newDiv.addEventListener("mouseout", () => {
+                    blockI.innerHTML = "";
+                    blockI.style.color = "#000000";
+                });
+                newDiv.style = "position: fixed; width: 50px; height: 50px; text-align: center; user-select: none; font-size: 10px; margin: none; vertical-align: middle; line-height: 50px; z-index: 0;";
                 newDiv.style.backgroundColor = Bcolor;
                 newDiv.style.color = color;
                 newDiv.style.left = x;
@@ -102,17 +125,26 @@
                 let x = Math.floor(Math.random() * document.body.clientWidth);
                 let y = Math.floor(Math.random() * document.body.clientHeight);
                 if (x > document.body.clientWidth - 50) {
-                    x -= 25;
+                    x -= 50;
                 }
                 if (y > document.body.clientHeight - 50) {
-                    y -= 25;
+                    y -= 50;
                 }
                 spawn(name, blockStrength, cost, Bcolor, color, x, y);
             }
 
             document.addEventListener("mousemove", () => {
+                infoI.style.visibility = "visible";
                 infoI.style.left = window.event.clientX + 10;
-                infoI.style.top = window.event.clientY + 10;
+                infoI.style.top = window.event.clientY + 8;
+                let infoIWidth = parseInt(infoI.style.width);
+                let infoIHeight = parseInt(infoI.style.height);
+                if (infoIWidth + window.event.clientX + 20 > document.body.clientWidth) {
+                    infoI.style.left = window.event.clientX + 10 - 130;
+                }
+                if (infoIHeight + window.event.clientY + 18 > document.body.clientHeight) {
+                    infoI.style.top = window.event.clientY + 8 - 80;
+                }
             });
             setInterval(mainInterval, 1000);
         </script>
