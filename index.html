@@ -33,8 +33,25 @@
                 ["Slate", 8, 17, "#767571", "#ffffff"],
                 ["Amethyst", 125, 400, "#b603fc", "#ffffff"],
                 ["Gold", 700, 120, "#e6b800", "#000000"],
+                ["Coal", 20, 15, "#000000", "#ffffff"],
             ];
-
+            const tools = [
+                ["Tier 1 Pickaxe", 0, 1],
+                ["Tier 2 Pickaxe", 50, 3],
+                ["Tier 3 Pickaxe", 100, 5],
+                ["Tier 4 Pickaxe", 250, 10],
+                ["Tier 5 Pickaxe", 750, 20],
+                ["Tier 6 Pickaxe", 1000, 30],
+                ["Tier 7 Pickaxe", 1200, 35],
+                ["Tier 8 Pickaxe", 1500, 40],
+                ["Tier 9 Pickaxe", 1750, 45],
+                ["Tier 10 Pickaxe", 2000, 50],
+            ];
+            const places = [
+                
+            ];
+            var currentTool = tools[0];
+            
             function mineM(toolStrength, blockStrength, cost, element) {
                 var secondsToMine = blockStrength / toolStrength;
                 loaderBar.style.visibility = "visible";
@@ -63,7 +80,8 @@
             function spawn(name, blockStrength, cost, Bcolor, color, x, y) {
                 let newDiv = document.createElement("div");
                 newDiv.addEventListener("click", () => {
-                    mineM(10000, blockStrength, cost, newDiv);
+                    let toolStrength = tools[currentTool]
+                    mineM(toolStrength, blockStrength, cost, newDiv);
                 })
                 newDiv.style = "position: fixed; width: 50px; height: 50px; text-align: center; user-select: none; font-size: 10px; margin: none; vertical-align: middle; line-height: 50px; z-index: 0";
                 newDiv.innerHTML = name;
