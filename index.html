@@ -1,8 +1,36 @@
 <html>
     <head>
         <title>mininggame</title>
+        <style>
+            * {
+                font-family: Arial, Helvetica, sans-serif;
+            }
+        </style>
     </head>
     <body>
+        <button id="shopButton" onclick="shopOpen();">Shop</button>
+        <dialog id="shopDialog" style="border-radius: 10px;">
+            <dialog id="confirmPurchase">
+                <h2></h2>
+                <p>Are you sure you want to purchase '' for $?</p>
+                <button id="confirmButtonShop" style="cursor: pointer;">Confirm</button>
+                <button onclick="document.getElementById('confirmPurchase').close()" style="cursor: pointer;">Cancel</button>
+            </dialog>
+            <h2 id="shopTitle" style="position: fixed;">Shop</h2>
+            <button id="shopClose" style="width: 25px; height: 25px; background-color: #ff0000; color: #ffffff; border-radius: 100px; text-align: center; position: fixed; border: none;" onclick="shopClose();">X</button>
+            <div id="shopTools" style="width: 212; height: 500px; background-color: #cccccc; padding: 5px; margin: 5px;">
+                <h2>Pickaxes</h2>
+                <button style="width: 50px; height: 50px; font-size: 10px; text-align: center;" onclick="promptConfirm('Tier 2 Pickaxe');">Tier 2 Pickaxe</button>
+                <button style="width: 50px; height: 50px; font-size: 10px; text-align: center;" onclick="promptConfirm('Tier 3 Pickaxe');">Tier 3 Pickaxe</button>
+                <button style="width: 50px; height: 50px; font-size: 10px; text-align: center;" onclick="promptConfirm('Tier 4 Pickaxe');">Tier 4 Pickaxe</button>
+                <button style="width: 50px; height: 50px; font-size: 10px; text-align: center;" onclick="promptConfirm('Tier 5 Pickaxe');">Tier 5 Pickaxe</button>
+                <button style="width: 50px; height: 50px; font-size: 10px; text-align: center;" onclick="promptConfirm('Tier 6 Pickaxe');">Tier 6 Pickaxe</button>
+                <button style="width: 50px; height: 50px; font-size: 10px; text-align: center;" onclick="promptConfirm('Tier 7 Pickaxe');">Tier 7 Pickaxe</button>
+                <button style="width: 50px; height: 50px; font-size: 10px; text-align: center;" onclick="promptConfirm('Tier 8 Pickaxe');">Tier 8 Pickaxe</button>
+                <button style="width: 50px; height: 50px; font-size: 10px; text-align: center;" onclick="promptConfirm('Tier 9 Pickaxe');">Tier 9 Pickaxe</button>
+                <button style="width: 50px; height: 50px; font-size: 10px; text-align: center;" onclick="promptConfirm('Tier 10 Pickaxe');">Tier 10 Pickaxe</button>
+            </div>
+        </dialog>
         <div id="infoI" style="visibility: hidden; z-index: 2; background-color: #efefef; border-radius: 10px; position: fixed; left: 10; top: 10; width: 100px; height: 62; padding: 5px; margin-top: 0px; padding-top: 0;">
             <p id="toolI" style="position: absolute; top: -14; left: 5"></p>
             <p id="moneyI" style="color: #00cc00; position: absolute; top: 1; left: 5">$0</p>
@@ -15,11 +43,16 @@
             var infoI = document.getElementById("infoI");
             var toolI = document.getElementById("toolI");
             var moneyI = document.getElementById("moneyI");
-            var money = 0;
+            var money = 51;
             var blockI = document.getElementById("blockI");
             var loaderBar = document.getElementById("loaderBar");
             var loaderContainer = document.getElementById("loaderContainer");
             var miningInterval = null;
+            var shopDialog = document.getElementById("shopDialog");
+            var shopCloseButton = document.getElementById("shopClose");
+            var shopTitle = document.getElementById("shopTitle");
+            var confirmPurchase = document.getElementById("confirmPurchase");
+            var confirmButtonShop = document.getElementById("confirmButtonShop");
             const blocks = [
                 ["Basalt", 10, 20, "#4E5356", "#ffffff"],
                 ["Tin", 14, 18, "#7B8973", "#000000"],
@@ -47,18 +80,19 @@
             ];
             const tools = [
                 ["Tier 1 Pickaxe", 0, 1, 15],
-                ["Tier 2 Pickaxe", 50, 3, 30],
-                ["Tier 3 Pickaxe", 100, 5, 60],
-                ["Tier 4 Pickaxe", 250, 10, 80],
-                ["Tier 5 Pickaxe", 750, 20, 100],
-                ["Tier 6 Pickaxe", 1000, 30, 150],
-                ["Tier 7 Pickaxe", 1200, 35, 200],
-                ["Tier 8 Pickaxe", 1500, 40, 300],
-                ["Tier 9 Pickaxe", 1750, 45, 400],
-                ["Tier 10 Pickaxe", 2000, 50, 500],
+                ["Tier 2 Pickaxe", 250, 3, 30],
+                ["Tier 3 Pickaxe", 1000, 5, 60],
+                ["Tier 4 Pickaxe", 2500, 10, 80],
+                ["Tier 5 Pickaxe", 5000, 20, 100],
+                ["Tier 6 Pickaxe", 7500, 30, 150],
+                ["Tier 7 Pickaxe", 10000, 35, 200],
+                ["Tier 8 Pickaxe", 12500, 40, 300],
+                ["Tier 9 Pickaxe", 15000, 45, 400],
+                ["Tier 10 Pickaxe", 25000, 50, 500],
             ];
-            var currentTool = tools[9];
+            var currentTool = tools[0];
             toolI.innerHTML = currentTool[0];
+            moneyI.innerHTML = "$" + money;
             
             function mineM(toolStrength, blockStrength, cost, element, name) {
                 var secondsToMine = blockStrength / toolStrength;
@@ -133,6 +167,63 @@
                 spawn(name, blockStrength, cost, Bcolor, color, x, y);
             }
 
+            function shopOpen() {
+                shopDialog.showModal();
+                shopDialog.style.width = document.body.clientWidth * 0.7;
+                shopDialog.style.height = document.body.clientHeight * 0.7;
+                shopCloseButton.style.right = shopDialog.getBoundingClientRect().left + 5;
+                shopCloseButton.style.top = shopDialog.getBoundingClientRect().top - 30;
+                shopTitle.style.left = shopDialog.getBoundingClientRect().left + 10;
+                shopTitle.style.top = shopDialog.getBoundingClientRect().top - 50;
+            }
+
+            function shopClose() {
+                shopDialog.close();
+            }
+
+            function promptConfirm(name) {
+                confirmPurchase.showModal();
+                var cost = 0;
+                for (let i = 0; i < tools.length; i++) {
+                    if (tools[i][0] == name) {
+                        cost = tools[i][1];
+                    }
+                }
+                confirmPurchase.children[0].innerHTML = name;
+                confirmPurchase.children[1].innerHTML = "Are you sure you want to purchase '" + name + "' for $" + cost + "?";
+                confirmButtonShop.removeAttribute("disabled");
+                confirmButtonShop.style.cursor = "pointer";
+                if (money < cost) {
+                    confirmPurchase.children[0].innerHTML = "Invaild Amount!";
+                    confirmPurchase.children[1].innerHTML = "You need $" + (cost - money) + " more to purchase '" + name + "!'";
+                    confirmButtonShop.setAttribute("disabled", "");
+                    confirmButtonShop.style.cursor = "not-allowed";
+                } else {
+                    confirmButtonShop.addEventListener("click", () => {
+                        purchaseSucessful(name, cost);
+                    });
+                }
+            }
+
+            function purchaseSucessful(name, cost) {
+                for (let i = 0; i < tools.length; i++) {
+                    if (tools[i][0] == name) {
+                        currentTool = tools[i];
+                    }
+                }
+                alert(currentTool[0]);
+                alert(name);
+                toolI.innerHTML = currentTool[0];
+                money -= cost;
+                moneyI.innerHTML = "$" + money;
+                confirmPurchase.close();
+                for (let i = 0; i < document.getElementById("shopTools").children.length; i++) {
+                    if (document.getElementById("shopTools").children[i].innerHTML == name) {
+                        document.getElementById("shopTools").children[i].setAttribute("disabled", "");
+                    }
+                }
+            }
+
             document.addEventListener("mousemove", () => {
                 infoI.style.visibility = "visible";
                 infoI.style.left = window.event.clientX + 10;
@@ -145,6 +236,14 @@
                 if (infoIHeight + window.event.clientY + 18 > document.body.clientHeight) {
                     infoI.style.top = window.event.clientY + 8 - 80;
                 }
+            });
+            document.addEventListener("resize", () => {
+                shopDialog.style.width = document.body.clientWidth * 0.7;
+                shopDialog.style.height = document.body.clientHeight * 0.7;
+                shopCloseButton.style.right = shopDialog.getBoundingClientRect().left + 5;
+                shopCloseButton.style.top = shopDialog.getBoundingClientRect().top + 7;
+                shopTitle.style.left = shopDialog.getBoundingClientRect().left + 10;
+                shopTitle.style.top = shopDialog.getBoundingClientRect().top - 50;
             });
             setInterval(mainInterval, 1000);
         </script>
