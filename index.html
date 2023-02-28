@@ -235,12 +235,15 @@
                 money -= cost;
                 moneyI.innerHTML = "$" + money;
                 confirmPurchase.close();
-                for (let i = 0; i < document.getElementById("shopTools").children.length; i++) {
+                for (var i = 0; i < document.getElementById("shopTools").children.length; i + 1) {
                     if (document.getElementById("shopTools").children[i].innerHTML == name) {
                         document.getElementById("shopTools").children[i].setAttribute("disabled", "");
                         document.getElementById("shopTools").children[i].style.cursor = "not-allowed";
-                        for (let i2 = 0; i2 < document.getElementById("shopTools").children; i++) {
-
+                        for (let i2 = 0; i2 < document.getElementById("shopTools").children.length; i + 1) {
+                            if (i2 < i) {
+                                document.getElementById("shopTools").children[i2].setAttribute("disabled", "");
+                                document.getElementById("shopTools").children[i2].style.cursor = "not-allowed";
+                            }
                         }
                     }
                 }
