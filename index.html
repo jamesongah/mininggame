@@ -5,10 +5,22 @@
             * {
                 font-family: Arial, Helvetica, sans-serif;
             }
+
+            h1, h2, p, button, div {
+                color: #000000;
+            }
+
+            button {
+                cursor: pointer;
+            }
         </style>
     </head>
     <body>
-        <button id="shopButton" onclick="shopOpen();">Shop</button>
+        <div id="geometry">
+
+        </div>
+        <button id="shopButton" onclick="shopOpen();" style="z-index: 2;">Shop</button>
+        <button onclick="for (let i = 0; i < document.getElementById('geometry').children.length; i + 1) {if (document.getElementById('geometry').children.length > 0) {document.getElementById('geometry').children[i].remove()}}" style="z-index: 2;">Clear</button>
         <dialog id="shopDialog" style="border-radius: 10px;">
             <dialog id="confirmPurchase">
                 <h2></h2>
@@ -43,7 +55,7 @@
             var infoI = document.getElementById("infoI");
             var toolI = document.getElementById("toolI");
             var moneyI = document.getElementById("moneyI");
-            var money = 51;
+            var money = 1328573;
             var blockI = document.getElementById("blockI");
             var loaderBar = document.getElementById("loaderBar");
             var loaderContainer = document.getElementById("loaderContainer");
@@ -58,13 +70,13 @@
                 ["Tin", 14, 18, "#7B8973", "#000000"],
                 ["Lead", 23, 20, "#6F7B8A", "#ffffff"],
                 ["Potassium", 9, 7, "#9EABAA", "#000000"],
-                ["Sodium", 20, 10, "#D4C9C8", "#000000"],
+                ["Sodium", 20, 10, "#978D84", "#000000"],
                 ["Zinc", 16, 20, "#98999D", "#000000"],
                 ["Copper", 32, 27, "#B26F31", "#ffffff"],
                 ["Aluminium", 10, 20, "#83878A", "#000000"],
                 ["Stone", 3, 4, "#9096A0", "#ffffff"],
-                ["Iron", 25, 30, "#E4E4E6", "#000000"],
-                ["Diamond", 1000, 500, "#B2EAF6", "#000000"],
+                ["Iron", 25, 30, "#9C988F", "#000000"],
+                ["Diamond", 1000, 500, "#70B4AC", "#000000"],
                 ["Granite", 7, 15, "#917B6D", "#ffffff"],
                 ["Limestone", 6, 8, "#958C7B", "#ffffff"],
                 ["Marble", 40, 50, "#998D7F", "#ffffff"],
@@ -106,8 +118,16 @@
                 miningInterval = setInterval(() => {
                     if (intervalIndex <= 50) {
                         if (miningInterval !== null) {
-                            intervalIndex += 1;
-                            loaderBar.style.setProperty("width", intervalIndex);
+                            if (element !== null) {
+                                intervalIndex += 1;
+                                loaderBar.style.setProperty("width", intervalIndex);
+                            } else {
+                                loaderBar.style.width = 0;
+                                clearInterval(miningInterval);
+                                loaderBar.style.visibility = "hidden";
+                                loaderContainer.style.visibility = "hidden";
+                                blockI.innerHTML = "";
+                            }
                         }
                     } else {
                         loaderBar.style.width = 0;
@@ -146,7 +166,7 @@
                 newDiv.style.color = color;
                 newDiv.style.left = x;
                 newDiv.style.top = y;
-                document.body.appendChild(newDiv);
+                document.getElementById("geometry").appendChild(newDiv);
             }
 
             function mainInterval() {
@@ -211,8 +231,6 @@
                         currentTool = tools[i];
                     }
                 }
-                alert(currentTool[0]);
-                alert(name);
                 toolI.innerHTML = currentTool[0];
                 money -= cost;
                 moneyI.innerHTML = "$" + money;
@@ -220,6 +238,10 @@
                 for (let i = 0; i < document.getElementById("shopTools").children.length; i++) {
                     if (document.getElementById("shopTools").children[i].innerHTML == name) {
                         document.getElementById("shopTools").children[i].setAttribute("disabled", "");
+                        document.getElementById("shopTools").children[i].style.cursor = "not-allowed";
+                        for (let i2 = 0; i2 < document.getElementById("shopTools").children; i++) {
+
+                        }
                     }
                 }
             }
